@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 22nd Birthday Sneha!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Pacifico&family=Righteous&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-pink: #ff007f;
+            --neon-blue: #00f3ff;
+            --neon-green: #0f0;
+            --bg-color: #050505;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: white;
+            font-family: 'Righteous', cursive;
+            overflow-x: hidden;
+            overflow-y: hidden; /* Locked initially */
+        }
+
+        /* --- LOGIN / LOCK SCREEN --- */
+        #login-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
+            z-index: 1000;
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .login-box {
+            background: rgba(0, 243, 255, 0.05);
+            border: 1px solid var(--neon-blue);
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2), inset 0 0 20px rgba(0, 243, 255, 0.1);
+            max-width: 500px;
+            width: 90%;
+            backdrop-filter: blur(5px);
+        }
+
+        .login-box h2 {
+            font-family: 'VT323', monospace;
+            color: var(--neon-pink);
+            font-size: 2rem;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .login-box p {
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            color: #ddd;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-family: 'VT323', monospace;
+            color: var(--neon-blue);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--neon-blue);
+            color: white;
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            border-radius: 5px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            box-shadow: 0 0 15px var(--neon-blue);
+            border-color: #fff;
+        }
+
+        /* Webkit overrides for date picker icon */
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(1) sepia(100%) saturate(10000%) hue-rotate(180deg);
+            cursor: pointer;
+        }
+
+        #unlock-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+            font-size: 1.5rem;
+            font-family: 'VT323', monospace;
+            background: transparent;
+            color: var(--neon-green);
+            border: 2px solid var(--neon-green);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        #unlock-btn:hover {
+            background: var(--neon-green);
+            color: #000;
+            box-shadow: 0 0 30px var(--neon-green);
+        }
+
+        #error-msg {
+            color: #ff0044;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            display: none;
+            text-shadow: 0 0 5px #ff0044;
+        }
+
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* --- MAIN SCROLL CONTAINER --- */
+        #main-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* SECTION 1: HERO (Cyberpunk) */
+        #sec-hero { background: radial-gradient(circle at center, #1a001a 0%, #000 100%); }
+        
+        .date-badge {
+            font-family: 'VT323', monospace;
+            font-size: 1.5rem;
+            color: var(--neon-blue);
+            margin-bottom: 20px;
+            border: 1px solid var(--neon-blue);
+            padding: 5px 15px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px var(--neon-blue);
+            animation: blink 2s infinite;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 10vw, 7rem);
+            line-height: 1.1;
+            color: transparent;
+            -webkit-text-stroke: 2px var(--neon-pink);
+            text-shadow: 0 0 20px var(--neon-pink), 0 0 40px var(--neon-pink);
+        }
+
+        .name-highlight {
+            color: #fff;
+            -webkit-text-stroke: 0;
+            text-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue), 0 0 80px var(--neon-blue);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            font-family: 'VT323', monospace;
+            color: #fff;
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+            opacity: 0.7;
+        }
+
+        /* SECTION 2: LOVE (Red/Hot Pink) */
+        #sec-love {
+            background: linear-gradient(135deg, #2a0000 0%, #1a0010 100%);
+            border-top: 2px solid #ff0044;
+            border-bottom: 2px solid #ff0044;
+        }
+
+        .love-text {
+            font-family: 'Pacifico', cursive;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: #ffb3c6;
+            text-shadow: 0 0 10px #ff0044, 0 0 20px #ff0044;
+            max-width: 900px;
+            line-height: 1.5;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 1s ease;
+        }
+
+        .cuteu-puteu {
+            color: #fff;
+            display: inline-block;
+            animation: wiggle 2s infinite;
+            text-shadow: 0 0 15px #ff007f;
+        }
+
+        .from-mridul {
+            margin-top: 40px;
+            font-family: 'Righteous', cursive;
+            font-size: 2rem;
+            color: var(--neon-blue);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease 0.5s;
+        }
+
+        /* SECTION 3: CAREER (Hacker/Matrix Green) */
+        #sec-career {
+            background: #020a02;
+            font-family: 'Fira Code', monospace;
+            border-bottom: 2px solid var(--neon-green);
+        }
+
+        .terminal-window {
+            background: rgba(0, 20, 0, 0.8);
+            border: 1px solid var(--neon-green);
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 800px;
+            width: 100%;
+            text-align: left;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.2);
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 1s ease;
+        }
+
+        .terminal-header {
+            border-bottom: 1px solid var(--neon-green);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: var(--neon-green);
+            font-size: 1.2rem;
+        }
+
+        .code-line {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .keyword { color: #ff7b72; } 
+        .string { color: #a5d6ff; } 
+        .function { color: #d2a8ff; } 
+        .comment { color: #8b949e; font-style: italic; }
+
+        /* SECTION 4: APOLOGY & HEART (Soft Purple/Gold) */
+        #sec-apology { background: radial-gradient(circle at top, #1a1025 0%, #05020a 100%); }
+
+        .apology-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.2);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease;
+        }
+
+        .apology-text {
+            font-family: 'Righteous', cursive;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: #e0d4f5;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            letter-spacing: 1px;
+        }
+
+        .highlight-gold {
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .heart-beat {
+            font-size: 3rem;
+            color: #ff0044;
+            display: inline-block;
+            animation: heartbeat 1.5s infinite;
+            margin-top: 20px;
+        }
+
+        /* ANIMATIONS */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
+        .show-element {
+            opacity: 1 !important;
+            transform: scale(1) translate(0, 0) !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SECURE LOGIN SCREEN -->
+    <div id="login-screen">
+        <div class="login-box" id="login-box">
+            <h2>SYSTEM LOCKED</h2>
+            <p>This website can only be opened by the most beautiful girl.</p>
+            
+            <div class="input-group">
+                <label for="name-input">IDENTITY (NAME):</label>
+                <input type="text" id="name-input" placeholder="Enter your name" autocomplete="off">
+            </div>
+            
+            <div class="input-group">
+                <label for="dob-input">DATE OF BIRTH:</label>
+                <input type="date" id="dob-input">
+            </div>
+
+            <button id="unlock-btn">AUTHORIZE ACCESS</button>
+            <p id="error-msg">Access Denied: You are not the most beautiful girl! (Try again)</p>
+        </div>
+    </div>
+
+    <!-- MAIN SCROLLING WEBSITE -->
+    <div id="main-content">
+        <!-- HERO -->
+        <section id="sec-hero">
+            <div class="date-badge">SYSTEM TIME: 07-MAY-2026 | ORIGIN: 07-MAY-2004</div>
+            <h1>HAPPY 22ND BIRTHDAY<br><span class="name-highlight">SNEHA!</span></h1>
+            <div class="scroll-indicator">↓ SCROLL DOWN ↓</div>
+        </section>
+
+        <!-- LOVE LETTER -->
+        <section id="sec-love">
+            <div class="love-text animate-on-scroll">
+                "Happy birthday to the prettiest, <span class="cuteu-puteu">cuteu puteu</span>, and hottest girl alive on the earth...<br><br>
+                and also the first love of my life, Sneha."
+            </div>
+            <div class="from-mridul animate-on-scroll">
+                — Forever yours, Mridul
+            </div>
+        </section>
+
+        <!-- CAREER / HACKER -->
+        <section id="sec-career">
+            <div class="terminal-window animate-on-scroll">
+                <div class="terminal-header">guest@mridul-server:~/wishes/sneha_career$ ./execute_future.sh</div>
+                <div class="code-line comment">/* A special function just for you */</div>
+                <div class="code-line"><span class="keyword">const</span> snehaCareer = <span class="keyword">async</span> () => {</div>
+                <div class="code-line" style="padding-left: 30px;">
+                    <span class="keyword">await</span> <span class="function">overcomeChallenges</span>();<br>
+                    <span class="keyword">return</span> <span class="string">"Massive Success in Programming!"</span>;
+                </div>
+                <div class="code-line">};</div>
+                <br>
+                <div class="code-line comment">// Wishing you the absolute best in your coding journey.</div>
+                <div class="code-line"><span class="function">console.log</span>(<span class="string">"May your code compile on the first try, your bugs be few, and your career reach the stars!"</span>);</div>
+                <div class="code-line" style="color: var(--neon-green); margin-top: 20px;">
+                    > Execution successful. Status: UNSTOPPABLE_DEVELOPER 🚀
+                </div>
+            </div>
+        </section>
+
+        <!-- APOLOGY & HEART -->
+        <section id="sec-apology">
+            <div class="apology-box animate-on-scroll">
+                <p class="apology-text">I am truly sorry if I have ever made any mistakes or hurt you in the past.</p>
+                <p class="apology-text" style="font-size: clamp(1.5rem, 4vw, 2.5rem); margin: 30px 0;">
+                    You will <span class="highlight-gold">always be the most special</span> person to me, no matter what happens or where life takes us.
+                </p>
+                <p class="apology-text">Just remember... I will always be right there in your heart.</p>
+                <div class="heart-beat">❤️</div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        // LOGIN LOGIC
+        document.getElementById('unlock-btn').addEventListener('click', validateLogin);
+        
+        // Also allow pressing "Enter" on the inputs
+        document.getElementById('name-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') validateLogin();
+        });
+        document.getElementById('dob-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') validateLogin();
+        });
+
+        function validateLogin() {
+            const nameVal = document.getElementById('name-input').value.toLowerCase().trim();
+            const dobVal = document.getElementById('dob-input').value; // Returns YYYY-MM-DD
+            const errorMsg = document.getElementById('error-msg');
+            const loginBox = document.getElementById('login-box');
+
+            // Check if name contains "sneha" and date is May 7, 2004
+            if (nameVal.includes('sneha') && dobVal === '2004-05-07') {
+                errorMsg.style.display = 'none';
+                
+                // Unlock Animation
+                const loginScreen = document.getElementById('login-screen');
+                loginScreen.style.transform = 'scale(1.1)';
+                loginScreen.style.opacity = '0';
+                
+                setTimeout(() => {
+                    loginScreen.style.display = 'none';
+                    const mainContent = document.getElementById('main-content');
+                    mainContent.style.display = 'block';
+                    document.body.style.overflowY = 'auto'; // Enable scrolling
+                    
+                    setTimeout(() => {
+                        mainContent.style.opacity = '1';
+                        fireConfetti();
+                    }, 100);
+                }, 1000);
+            } else {
+                // Deny Access
+                errorMsg.style.display = 'block';
+                loginBox.classList.remove('shake');
+                void loginBox.offsetWidth; // Trigger reflow
+                loginBox.classList.add('shake');
+            }
+        }
+
+        // CRAZY CONFETTI
+        function fireConfetti() {
+            var duration = 8 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                var particleCount = 50 * (timeLeft / duration);
+                
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors: ['#ff007f', '#00f3ff', '#ffffff']
+                }));
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors: ['#ff007f', '#00f3ff', '#ffffff']
+                }));
+            }, 250);
+        }
+
+        // SCROLL ANIMATIONS
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show-element');
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el));
+    </script>
+</body>
+</html>
