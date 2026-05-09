@@ -483,8 +483,20 @@
             const errorMsg = document.getElementById('error-msg');
             const loginBox = document.getElementById('login-box');
 
-            // Check if name contains "sneha" and date is May 7, 2004
-            if (nameVal.includes('sneha') && dobVal === '2004-05-07') {
+            // List of exact allowed names (case-insensitive)
+            const allowedNames = [
+                "sneha",
+                "sneha mridul",
+                "sneha mridul thakur",
+                "archi",
+                "aarchi",
+                "sneha kumari",
+                "sneha sahu",
+                "sneha prasad"
+            ];
+
+            // Check if name is in the allowed list and date is May 7, 2004
+            if (allowedNames.includes(nameVal) && dobVal === '2004-05-07') {
                 errorMsg.style.display = 'none';
                 
                 // Unlock Animation
