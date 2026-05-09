@@ -373,7 +373,7 @@
     <div id="main-content">
         <!-- HERO -->
         <section id="sec-hero">
-            <div class="date-badge">SYSTEM TIME: 07-MAY-2026 | ORIGIN: 07-MAY-2004</div>
+            <div class="date-badge" id="system-time-badge">SYSTEM TIME: CALCULATING... | ORIGIN: 07-MAY-2004</div>
             <h1>HAPPY 22ND BIRTHDAY<br><span class="name-highlight">SNEHA!</span></h1>
             <div class="scroll-indicator">↓ SCROLL DOWN ↓</div>
         </section>
@@ -426,6 +426,46 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
+        // LIVE "TIME ALIVE" TRACKER
+        function updateSystemTime() {
+            // Origin Date: May 7, 2004, 00:00:00 IST
+            // IST is UTC+5:30. 
+            // 2004-05-06T18:30:00.000Z is exactly May 7, 2004, 00:00:00 IST
+            const originDate = new Date('2004-05-06T18:30:00.000Z');
+            const now = new Date();
+            
+            let diffTime = now - originDate;
+
+            // Calculate time components
+            const years = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365.25));
+            diffTime -= years * (1000 * 60 * 60 * 24 * 365.25);
+
+            const days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            diffTime -= days * (1000 * 60 * 60 * 24);
+
+            const hours = Math.floor(diffTime / (1000 * 60 * 60));
+            diffTime -= hours * (1000 * 60 * 60);
+
+            const minutes = Math.floor(diffTime / (1000 * 60));
+            diffTime -= minutes * (1000 * 60);
+
+            const seconds = Math.floor(diffTime / 1000);
+
+            // Format with leading zeros
+            const h = hours.toString().padStart(2, '0');
+            const m = minutes.toString().padStart(2, '0');
+            const s = seconds.toString().padStart(2, '0');
+            
+            const badge = document.getElementById('system-time-badge');
+            if (badge) {
+                badge.innerText = `SNEHA UPTIME: ${years}Y ${days}D ${h}:${m}:${s} | ORIGIN: 07-MAY-2004`;
+            }
+        }
+        
+        // Update the clock immediately, then every 1 second
+        updateSystemTime();
+        setInterval(updateSystemTime, 1000);
+
         // LOGIN LOGIC
         document.getElementById('unlock-btn').addEventListener('click', validateLogin);
         
